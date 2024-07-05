@@ -1,0 +1,331 @@
+{
+  "Hokkaido": [
+    "Sapporo",
+    "Hakodate",
+    "Asahikawa",
+    "Obihiro",
+    "Kushiro"
+  ],
+  "Aomori": [
+    "Aomori",
+    "Hirosaki",
+    "Misawa",
+    "Hachinohe",
+    "Tsugaru"
+  ],
+  "Iwate": [
+    "Morioka",
+    "Hachimantai",
+    "Hanamaki",
+    "Ichinoseki",
+    "Oshu"
+  ],
+  "Miyagi": [
+    "Sendai",
+    "Ishinomaki",
+    "Tagajo",
+    "Shiroishi",
+    "Kesennuma"
+  ],
+  "Akita": [
+    "Akita",
+    "Yuzawa",
+    "Odate",
+    "Noshiro",
+    "Daisen"
+  ],
+  "Yamagata": [
+    "Yamagata",
+    "Sakata",
+    "Tendo",
+    "Yonezawa",
+    "Shinjo"
+  ],
+  "Fukushima": [
+    "Fukushima",
+    "Koriyama",
+    "Iwaki",
+    "Aizuwakamatsu",
+    "Soma"
+  ],
+  "Ibaraki": [
+    "Mito",
+    "Tsukuba",
+    "Hitachi",
+    "Kashima",
+    "Tsuchiura"
+  ],
+  "Tochigi": [
+    "Utsunomiya",
+    "Ashikaga",
+    "Kanuma",
+    "Oyama",
+    "Nikko"
+  ],
+  "Gunma": [
+    "Maebashi",
+    "Takasaki",
+    "Kiryu",
+    "Ota",
+    "Isesaki"
+  ],
+  "Saitama": [
+    "Saitama",
+    "Kawagoe",
+    "Koshigaya",
+    "Kumagaya",
+    "Tokorozawa"
+  ],
+  "Chiba": [
+    "Chiba",
+    "Funabashi",
+    "Ichikawa",
+    "Matsudo",
+    "Narita"
+  ],
+  "Tokyo": [
+    "Tokyo",
+    "Shinjuku",
+    "Shibuya",
+    "Ikebukuro",
+    "Asakusa"
+  ],
+  "Kanagawa": [
+    "Yokohama",
+    "Kawasaki",
+    "Sagamihara",
+    "Yokosuka",
+    "Fujisawa"
+  ],
+  "Niigata": [
+    "Niigata",
+    "Nagaoka",
+    "Joetsu",
+    "Sado",
+    "Kashiwazaki"
+  ],
+  "Toyama": [
+    "Toyama",
+    "Takaoka",
+    "Uozu",
+    "Namerikawa",
+    "Kurobe"
+  ],
+  "Ishikawa": [
+    "Kanazawa",
+    "Wajima",
+    "Komatsu",
+    "Nanao",
+    "Hakui"
+  ],
+  "Fukui": [
+    "Fukui",
+    "Obama",
+    "Sabae",
+    "Ono",
+    "Echizen"
+  ],
+  "Yamanashi": [
+    "Kofu",
+    "Fuefuki",
+    "Isawa",
+    "Nirasaki",
+    "Otsuki"
+  ],
+  "Nagano": [
+    "Nagano",
+    "Matsumoto",
+    "Ueda",
+    "Komoro",
+    "Saku"
+  ],
+  "Gifu": [
+    "Gifu",
+    "Takayama",
+    "Hashima",
+    "Mino",
+    "Mizuho"
+  ],
+  "Shizuoka": [
+    "Shizuoka",
+    "Hamamatsu",
+    "Numazu",
+    "Iwata",
+    "Fuji"
+  ],
+  "Aichi": [
+    "Nagoya",
+    "Toyohashi",
+    "Okazaki",
+    "Ichinomiya",
+    "Seto"
+  ],
+  "Mie": [
+    "Tsu",
+    "Yokkaichi",
+    "Suzuka",
+    "Ise",
+    "Matsusaka"
+  ],
+  "Shiga": [
+    "Otsu",
+    "Hikone",
+    "Nagahama",
+    "Kusatsu",
+    "Koka"
+  ],
+  "Kyoto": [
+    "Kyoto",
+    "Uji",
+    "Miyazu",
+    "Ayabe",
+    "Maizuru"
+  ],
+  "Osaka": [
+    "Osaka",
+    "Sakai",
+    "Higashiosaka",
+    "Suita",
+    "Ibaraki"
+  ],
+  "Hyogo": [
+    "Kobe",
+    "Himeji",
+    "Nishinomiya",
+    "Amagasaki",
+    "Akashi"
+  ],
+  "Nara": [
+    "Nara",
+    "Kashihara",
+    "Ikoma",
+    "Yamatokoriyama",
+    "Tenri"
+  ],
+  "Wakayama": [
+    "Wakayama",
+    "Hashimoto",
+    "Wakayama",
+    "Shingu",
+    "Tanabe"
+  ],
+  "Tottori": [
+    "Tottori",
+    "Yonago",
+    "Sakaiminato",
+    "Kurayoshi",
+    "Tottori"
+  ],
+  "Shimane": [
+    "Matsue",
+    "Izumo",
+    "Yasugi",
+    "Gotsu",
+    "Oda"
+  ],
+  "Okayama": [
+    "Okayama",
+    "Kurashiki",
+    "Tsuyama",
+    "Tamano",
+    "Okayama"
+  ],
+  "Hiroshima": [
+    "Hiroshima",
+    "Fukuyama",
+    "Onomichi",
+    "Kure",
+    "Miyoshi"
+  ],
+  "Yamaguchi": [
+    "Yamaguchi",
+    "Shimonoseki",
+    "Ube",
+    "Hagi",
+    "Mine"
+  ],
+  "Tokushima": [
+    "Tokushima",
+    "Naruto",
+    "Komatsushima",
+    "Awa",
+    "Mima"
+  ],
+  "Kagawa": [
+    "Takamatsu",
+    "Marugame",
+    "Sakaide",
+    "Kagawa",
+    "Kanonji"
+  ],
+  "Ehime": [
+    "Matsuyama",
+    "Uwajima",
+    "Niihama",
+    "Yawatahama",
+    "Imabari"
+  ],
+  "Kochi": [
+    "Kochi",
+    "Nankoku",
+    "Shimanto",
+    "Sukumo",
+    "Kochi"
+  ],
+  "Fukuoka": [
+    "Fukuoka",
+    "Kitakyushu",
+    "Kurume",
+    "Fukuoka",
+    "Omuta"
+  ],
+  "Saga": [
+    "Saga",
+    "Karatsu",
+    "Takeo",
+    "Saga",
+    "Imari"
+  ],
+  "Nagasaki": [
+    "Nagasaki",
+    "Sasebo",
+    "Isahaya",
+    "Shimabara",
+    "Nagayo"
+  ],
+  "Kumamoto": [
+    "Kumamoto",
+    "Yatsushiro",
+    "Kikuchi",
+    "Uto",
+    "Tamana"
+  ],
+  "Oita": [
+    "Oita",
+    "Beppu",
+    "Nakatsu",
+    "Saiki",
+    "Usa"
+  ],
+  "Miyazaki": [
+    "Miyazaki",
+    "Miyakonojo",
+    "Nobeoka",
+    "Hyuga",
+    "Nichinan"
+  ],
+  "Kagoshima": [
+    "Kagoshima",
+    "Kirishima",
+    "Satsumasendai",
+    "Ibusuki",
+    "Kanoya"
+  ],
+  "Okinawa": [
+    "Naha",
+    "Okinawa",
+    "Uruma",
+    "Miyakojima",
+    "Nago"
+  ]
+}

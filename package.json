@@ -1,0 +1,28 @@
+{
+  "name": "final",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@dangvanthanh/vue-clock": "^0.2.5",
+    "@harv46/vue-table": "^0.1.2",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "bootstrap-vue": "^2.23.1",
+    "moment": "^2.30.1",
+    "vue": "^3.4.29",
+    "vue-fullpage-modal": "^0.5.4",
+    "vue-modaltor": "^1.5.4",
+    "vue-moment-lib": "^1.2.2",
+    "vue-router": "^4.0.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.1"
+  }
+}
