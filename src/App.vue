@@ -1,6 +1,6 @@
 <script setup>
-import Landing from "@/components/Landing.vue";
 import ShowData from "@/components/ShowData.vue";
+import Landing from "@/components/Landing.vue";
 </script>
 
 <template>
