@@ -1,20 +1,44 @@
 <script>
-import moment from 'moment';
 import { ref, onMounted, computed } from 'vue';
 import prefecturesData from '../data/perfecture.json';
 import citiesData from '../data/cities.json';
-import nationality from '../data/nationality.json';
-import axios from "axios";
-
+import nationalityData from '../data/nationality.json'; // Import nationality data
+import moment from 'moment';
+import axios from 'axios';
 
 export default {
   setup() {
     const currentTime = ref(moment().format('HH:mm:ss'));
-    const prefectures = ref(prefecturesData);
-    const cities = ref(citiesData);
+    const prefectures = ref(prefecturesData); // Array of prefectures
+    const cities = ref(citiesData); // Object of cities grouped by prefecture
+    const national = ref(nationalityData); // Array of nationalities
     const selectedPrefecture = ref('');
     const selectedCity = ref('');
-    const national = ref(nationality);
+    const form = ref({
+      fname: '',
+      mname: '',
+      lname: '',
+      nationality: '',
+      prefecture: '',
+      city: '',
+      phone_no: '',
+      email: '',
+      national_id: '',
+      height: '',
+      weight: '',
+      postal_code: '',
+      address: '',
+      emergency_contact_number: '',
+      allergies: '',
+      medical_conditions: '',
+      blood_related_diseases: '',
+      blood_type: '',
+      age_confirmation: false,
+      consent_to_share: false,
+    });
+    const success = ref('');
+    const response = ref('');
+    const validationErrors = ref({});
 
     const startClock = () => {
       setInterval(() => {
@@ -27,63 +51,148 @@ export default {
     });
 
     const updateCities = () => {
-      if (selectedPrefecture.value) {
-        selectedCity.value = ''; // Reset selected city when prefecture changes
-      }
+      selectedCity.value = '';
+      form.value.city = '';
     };
 
     const filteredCities = computed(() => {
-      return cities.value[selectedPrefecture.value] || [];
+      return cities.value[form.value.prefecture] || [];
     });
+
+    const validateForm = () => {
+      let errors = {};
+
+      // Check if required fields are filled
+      if (!form.value.fname) errors.fname = 'First name is required';
+      if (!form.value.lname) errors.lname = 'Last name is required';
+      if (!form.value.phone_no || isNaN(form.value.phone_no)) errors.phone_no = 'Phone number must be numeric';
+      if (!form.value.postal_code || isNaN(form.value.postal_code)) errors.postal_code = 'Postal code must be numeric';
+      if (!form.value.nationality) errors.nationality = 'Nationality is required';
+
+      // Validate email
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (form.value.email && !emailRegex.test(form.value.email)) {
+        errors.email = 'Invalid email format';
+      }
+
+      // Validate national ID
+      const nationalIdRegex = /^\d{10}$/;
+      if (!form.value.national_id) {
+        errors.national_id = 'National ID is required';
+      } else if (!nationalIdRegex.test(form.value.national_id)) {
+        errors.national_id = 'National ID must be exactly 10 digits';
+      }
+
+      // Validate height
+      const height = parseFloat(form.value.height);
+      if (!form.value.height) {
+        errors.height = 'Height is required';
+      } else if (isNaN(height) || height < 100 || height > 300) {
+        errors.height = 'Height must be a number between 100 and 300 cm';
+      }
+
+      // Validate weight
+      const weight = parseFloat(form.value.weight);
+      if (!form.value.weight) {
+        errors.weight = 'Weight is required';
+      } else if (isNaN(weight) || weight < 50 || weight > 300) {
+        errors.weight = 'Weight must be a number between 50 and 300 kg';
+      }
+
+      // Validate prefecture
+      if (!form.value.prefecture) {
+        errors.prefecture = 'Prefecture is required';
+      } else if (!prefectures.value.includes(form.value.prefecture)) {
+        errors.prefecture = 'Selected prefecture is not valid';
+      }
+
+      // Validate city
+      if (!form.value.city) {
+        errors.city = 'City is required';
+      } else if (!filteredCities.value.includes(form.value.city)) {
+        errors.city = 'Selected city is not valid';
+      }
+
+      // Validate blood type
+      if (!form.value.blood_type) {
+        errors.blood_type = 'Blood type is required';
+      }
+
+      return errors;
+};
+
+
+    const submitForm = async () => {
+  validationErrors.value = validateForm();
+  console.log('Validation Errors:', validationErrors.value); // Add this line
+  if (Object.keys(validationErrors.value).length > 0) {
+    alert('Please fix the validation errors');
+    return;
+  }
+
+  try {
+    const result = await axios.post('http://localhost:3000/api/donors', form.value, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    success.value = 'Data saved successfully';
+    response.value = JSON.stringify(result.data, null, 2);
+    resetForm();
+  } catch (error) {
+    console.error('Error submitting data:', error);
+    response.value = 'Error: ' + (error.response ? error.response.status : error.message);
+  }
+};
+
+    const resetForm = () => {
+      form.value = {
+        fname: '',
+        mname: '',
+        lname: '',
+        nationality: '',
+        prefecture: '',
+        city: '',
+        phone_no: '',
+        email: '',
+        national_id: '',
+        height: '',
+        weight: '',
+        postal_code: '',
+        address: '',
+        emergency_contact_number: '',
+        allergies: '',
+        medical_conditions: '',
+        blood_related_diseases: '',
+        blood_type: '',
+        age_confirmation: false,
+        consent_to_share: false,
+      };
+      selectedPrefecture.value = '';
+      selectedCity.value = '';
+    };
 
     return {
       currentTime,
       prefectures,
       cities,
+      national, // Add nationality data to return
       selectedPrefecture,
       selectedCity,
       updateCities,
       filteredCities,
-      national
+      form,
+      success,
+      response,
+      validationErrors,
+      validateForm,
+      submitForm,
+      resetForm
     };
-  },
-  data() {
-    return {
-      form: {
-        fname: ''
-      }
-    };
-  },
-  methods: {
-    async submitForm() {
-      try {
-        const response = await fetch('http://localhost:3000/api/donors', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.form)
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to submit data');
-        }
-
-        alert('Data submitted successfully!');
-        this.resetForm(); // Optional: Reset form fields after successful submission
-      } catch (error) {
-        console.error('Error submitting data:', error);
-        alert('Failed to submit data');
-      }
-    },
-    resetForm() {
-      this.form = {
-        fname: '',
-        // Reset other fields as needed
-      };
-    }
   }
 };
+
 </script>
 
 <template>
@@ -106,195 +215,275 @@ export default {
           <h4 class="sub-title">Personal Details</h4>
           <hr style="margin-top: -2px">
           <div class="col-sm-4">
-            <label for="firstName" class="form-label">First name</label>
-            <input  type="text" class="form-control" id="firstName" v-model="fname" placeholder="First Name">
-            <div class="invalid-feedback">
-              Valid first name is required.
+              <label for="firstName" class="form-label">First name</label>
+              <input type="text"
+                     class="form-control"
+                     id="firstName"
+                     v-model="form.fname"
+                     placeholder="First Name"
+                     :class="{ 'is-invalid': validationErrors.fname }">
+              <div class="invalid-feedback">
+                {{ validationErrors.fname }}
+              </div>
             </div>
-          </div>
           <div class="col-sm-4">
-            <label for="middleName" class="form-label">Middle name (if you have)</label>
-            <input type="text" class="form-control" id="middleName" placeholder="" value="">
+              <label for="middleName" class="form-label">Middle name (if you have)</label>
+              <input type="text"
+                     class="form-control"
+                     id="middleName"
+                     placeholder="Middle Name"
+                     v-model="form.mname">
+              <div class="invalid-feedback">
+                Valid middle name is required.
+              </div>
+            </div>
+         <div class="col-sm-4">
+              <label for="lastName" class="form-label">Last name</label>
+              <input type="text"
+                     class="form-control"
+                     id="lastName"
+                     v-model="form.lname"
+                     placeholder="Last Name"
+                     :class="{ 'is-invalid': validationErrors.lname }">
+              <div class="invalid-feedback">
+                {{ validationErrors.lname }}
+              </div>
+            </div>
+         <div class="col-md-5">
+            <label for="nationality" class="form-label">Nationality</label>
+            <select class="form-select" id="nationality"
+                    v-model="form.nationality"
+                    :class="{ 'is-invalid': validationErrors.nationality }">
+              <option value="">Choose...</option>
+              <option v-for="nation in national"
+                      :key="nation" :value="nation">{{ nation }}</option>
+            </select>
             <div class="invalid-feedback">
-              Valid middle name is required.
+              {{ validationErrors.nationality }}
             </div>
           </div>
-          <div class="col-sm-4">
-            <label for="lastName" class="form-label">Last name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
-            <div class="invalid-feedback">
-              Valid last name is required.
+          <div class="col-12">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="text"
+                     class="form-control"
+                     id="phoneNumber"
+                     v-model="form.phone_no"
+                     placeholder="Phone Number"
+                     :class="{ 'is-invalid': validationErrors.phone_no }">
+              <div class="invalid-feedback">
+                {{ validationErrors.phone_no }}
+              </div>
             </div>
-          </div>
+          <div class="col-12">
+          <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
+          <input type="email"
+                 class="form-control"
+                 id="email"
+                 v-model="form.email"
+                 placeholder="you@example.com"
+                 :class="{ 'is-invalid': validationErrors.email }">
+              <div class="invalid-feedback">
+                {{ validationErrors.email }}
+              </div>
+            </div>
+          <div class="col-12">
+              <label for="nationalId" class="form-label">National ID</label>
+              <input type="text"
+                     class="form-control"
+                     id="nationalId"
+                     v-model="form.national_id"
+                     placeholder="National ID"
+                     :class="{ 'is-invalid': validationErrors.national_id }">
+              <div class="invalid-feedback">
+                {{ validationErrors.national_id }}
+              </div>
+            </div>
           <div class="col-md-5">
-            <label for="country" class="form-label">Nationality</label>
-            <select class="form-select" id="nationality" required>
-                <option value="">Choose...</option>
-                <option v-for="nation in national" :key="nation">{{ nation }}</option>
-              </select>
-            <div class="invalid-feedback">
-              Please select a valid nationality.
+              <label for="height" class="form-label">Height (cm)</label>
+              <input type="number"
+                     class="form-control"
+                     id="height"
+                     v-model="form.height"
+                     placeholder="Height"
+                     :class="{ 'is-invalid': validationErrors.height }">
+              <div class="invalid-feedback">
+                {{ validationErrors.height }}
+              </div>
             </div>
-          </div>
-          <div class="col-12">
-            <label for="phone" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" id="phone" placeholder="123-4567-7891" required="">
-            <div class="invalid-feedback">
-              Please enter your phone number.
+          <div class="col-md-5">
+              <label for="weight" class="form-label">Weight (kg)</label>
+              <input type="number"
+                     class="form-control"
+                     id="weight"
+                     v-model="form.weight"
+                     placeholder="Weight"
+                     :class="{ 'is-invalid': validationErrors.weight }">
+              <div class="invalid-feedback">
+                {{ validationErrors.weight }}
+              </div>
             </div>
-          </div>
-          <div class="col-12">
-            <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
-            <input type="email" class="form-control" id="email" placeholder="you@example.com">
-            <div class="invalid-feedback">
-              Please enter a valid email address.
-            </div>
-          </div>
-          <div class="col-12">
-            <label for="nationalId" class="form-label">National ID</label>
-            <input type="text" class="form-control" id="nationalId" placeholder="123456789" required="">
-            <div class="invalid-feedback">
-              Please enter your National ID.
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label for="height" class="form-label">Height (cm)</label>
-            <input type="number" class="form-control" id="height" placeholder="170" required="">
-            <div class="invalid-feedback">
-              Please enter your height.
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label for="weight" class="form-label">Weight (kg)</label>
-            <input type="number" class="form-control" id="weight" placeholder="70" required="">
-            <div class="invalid-feedback">
-              Please enter your weight.
-            </div>
-          </div>
           <div class="col-md-5">
             <label for="prefecture" class="form-label">Prefecture</label>
-            <select class="form-select" id="prefecture" v-model="selectedPrefecture" @change="updateCities" required>
-                <option value="">Choose...</option>
-                <option v-for="prefecture in prefectures" :key="prefecture">{{ prefecture }}</option>
-              </select>
+            <select class="form-select" id="prefecture"
+                    v-model="form.prefecture"
+                    @change="updateCities"
+                    :class="{ 'is-invalid': validationErrors.prefecture }">
+              <option value="">Choose...</option>
+              <option v-for="pref in prefectures" :key="pref" :value="pref">{{ pref }}</option>
+            </select>
             <div class="invalid-feedback">
-              Please select a valid prefecture.
+              {{ validationErrors.prefecture }}
             </div>
           </div>
-          <div class="col-md-4">
+
+          <div class="col-md-5">
             <label for="city" class="form-label">City</label>
-             <select class="form-select" id="cities" v-model="selectedCity" required>
-                <option value="">Choose...</option>
-                <option v-for="city in filteredCities" :key="city">{{ city }}</option>
-              </select>
+            <select class="form-select" id="city"
+                    v-model="form.city"
+                    :class="{ 'is-invalid': validationErrors.city }">
+              <option value="">Choose...</option>
+              <option v-for="city in filteredCities" :key="city" :value="city">{{ city }}</option>
+            </select>
             <div class="invalid-feedback">
-              Please provide a valid city.
+              {{ validationErrors.city }}
             </div>
           </div>
-          <div class="col-md-3">
-            <label for="zip" class="form-label">Postal Code</label>
-            <input type="text" class="form-control" id="zip" placeholder="" required="">
-            <div class="invalid-feedback">
-              Zip code required.
+          <div class="col-md-5">
+              <label for="postalCode" class="form-label">Postal Code</label>
+              <input type="text"
+                     class="form-control"
+                     id="postalCode"
+                     v-model="form.postal_code"
+                     placeholder="Postal Code"
+                     :class="{ 'is-invalid': validationErrors.postal_code }">
+              <div class="invalid-feedback">
+                {{ validationErrors.postal_code }}
+              </div>
             </div>
-          </div>
           <div class="col-12">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
-            <div class="invalid-feedback">
-              Please enter your address.
+              <label for="address" class="form-label">Address</label>
+              <input type="text"
+                     class="form-control"
+                     id="address"
+                     v-model="form.address"
+                     placeholder="Address"
+                     :class="{ 'is-invalid': validationErrors.address }">
+              <div class="invalid-feedback">
+                {{ validationErrors.address }}
+              </div>
             </div>
-          </div>
           <div class="col-12">
-            <label for="emergencyContact" class="form-label">Emergency Contact Number</label>
-            <input type="text" class="form-control" id="emergencyContact" placeholder="987-6543-210" required="">
-            <div class="invalid-feedback">
-              Please enter an emergency contact number.
+              <label for="emergencyContact" class="form-label">Emergency Contact Number</label>
+              <input type="text"
+                     class="form-control"
+                     id="emergencyContact"
+                     v-model="form.emergency_contact_number"
+                     placeholder="Emergency Contact Number">
             </div>
-          </div>
         </div>
         <hr class="my-4">
         <div class="row g-3">
           <h4 class="sub-title">Medical History</h4>
           <hr style="margin-top: -2px">
           <div class="col-12">
-            <label for="allergies" class="form-label">Allergies</label>
-            <textarea class="form-control" id="allergies" rows="3" placeholder="List any allergies you have"></textarea>
-            <div class="invalid-feedback">
-              Please enter any allergies.
+              <label for="allergies" class="form-label">Allergies</label>
+              <textarea class="form-control"
+                        id="allergies"
+                        v-model="form.allergies"
+                        placeholder="Allergies"></textarea>
             </div>
-          </div>
           <div class="col-12">
-            <label for="medicalConditions" class="form-label">Medical Conditions</label>
-            <textarea class="form-control" id="medicalConditions" rows="3" placeholder="List any medical conditions you have"></textarea>
-            <div class="invalid-feedback">
-              Please enter any medical conditions.
+              <label for="medicalConditions" class="form-label">Medical Conditions</label>
+              <textarea class="form-control"
+                        id="medicalConditions"
+                        v-model="form.medical_conditions"
+                        placeholder="Medical Conditions"></textarea>
             </div>
-          </div>
           <div class="col-12">
-            <label for="bloodDiseases" class="form-label">Blood-Related Diseases</label>
-            <textarea class="form-control" id="bloodDiseases" rows="3" placeholder="List any blood-related diseases you have"></textarea>
-            <div class="invalid-feedback">
-              Please enter any blood-related diseases.
+              <label for="bloodRelatedDiseases" class="form-label">Blood Related Diseases</label>
+              <textarea class="form-control"
+                        id="bloodRelatedDiseases"
+                        v-model="form.blood_related_diseases"
+                        placeholder="Blood Related Diseases"></textarea>
             </div>
-          </div>
           <div class="col-12">
-            <label for="bloodtype" class="form-label">Blood Type</label>
-            <div class="row gy-2">
-              <div class="col-sm-6">
-                <div class="form-check">
-                  <input id="A+" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="A+">A+</label>
+              <label for="bloodtype" class="form-label">Blood Type</label>
+              <div class="row gy-2">
+                <div class="col-sm-6">
+                  <div class="form-check">
+                    <input id="A+" name="bloodType" type="radio" class="form-check-input" value="A+" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="A+">A+</label>
+                  </div>
+                  <div class="form-check">
+                    <input id="B+" name="bloodType" type="radio" class="form-check-input" value="B+" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="B+">B+</label>
+                  </div>
+                  <div class="form-check">
+                    <input id="AB+" name="bloodType" type="radio" class="form-check-input" value="AB+" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="AB+">AB+</label>
+                  </div>
+                  <div class="form-check">
+                    <input id="O+" name="bloodType" type="radio" class="form-check-input" value="O+" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="O+">O+</label>
+                  </div>
                 </div>
-                <div class="form-check">
-                  <input id="B+" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="B+">B+</label>
-                </div>
-                <div class="form-check">
-                  <input id="AB+" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="AB+">AB+</label>
-                </div>
-                <div class="form-check">
-                  <input id="O+" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="O+">O+</label>
+                <div class="col-sm-6">
+                  <div class="form-check">
+                    <input id="A-" name="bloodType" type="radio" class="form-check-input" value="A-" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="A-">A-</label>
+                  </div>
+                  <div class="form-check">
+                    <input id="B-" name="bloodType" type="radio" class="form-check-input" value="B-" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="B-">B-</label>
+                  </div>
+                  <div class="form-check">
+                    <input id="AB-" name="bloodType" type="radio" class="form-check-input" value="AB-" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="AB-">AB-</label>
+                  </div>
+                  <div class="form-check">
+                    <input id="O-" name="bloodType" type="radio" class="form-check-input" value="O-" v-model="form.blood_type" required>
+                    <label class="form-check-label" for="O-">O-</label>
+                  </div>
                 </div>
               </div>
-              <div class="col-sm-6">
-                <div class="form-check">
-                  <input id="A-" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="A-">A-</label>
-                </div>
-                <div class="form-check">
-                  <input id="B-" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="B-">B-</label>
-                </div>
-                <div class="form-check">
-                  <input id="AB-" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="AB-">AB-</label>
-                </div>
-                <div class="form-check">
-                  <input id="O-" name="bloodType" type="radio" class="form-check-input" required="">
-                  <label class="form-check-label" for="O-">O-</label>
+              <div v-if="validationErrors.blood_type" class="invalid-feedback d-block">
+                {{ validationErrors.blood_type }}
+              </div>
+            </div>
+
+          <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="ageConfirmation"
+                       v-model="form.age_confirmation">
+                <label class="form-check-label" for="ageConfirmation">
+                  I confirm that I am 18 years of age or older
+                </label>
+              </div>
+            </div>
+          <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="termsAndConditions"
+                       v-model="form.terms_and_conditions"
+                       required>
+                <label class="form-check-label" for="termsAndConditions">
+                  I agree to the terms and conditions
+                </label>
+                <div class="invalid-feedback">
+                  You must agree to the terms and conditions before submitting.
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-12">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="same-address">
-              <label class="form-check-label" for="same-address">I am 18+ years old</label>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="consentToShare">
-              <label class="form-check-label" for="consentToShare">Consent to Share Information with Medical Staff</label>
-            </div>
-          </div>
         </div>
         <hr class="my-4">
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Submit</button>
-        <button class="w-100 btn btn-primary btn-lg" type="submit">View Data</button>
+        <div class="col-12">
+              <button class="btn btn-primary" type="submit" :disabled="isSubmitting">
+                Submit
+              </button>
+        </div>
       </form>
     </div>
   </div>
@@ -371,6 +560,7 @@ header {
 .form-container h4 {
   color: #A00E34;
 }
+
 .btn-primary {
   background-color: #A00E34;
   border: none;
@@ -416,16 +606,19 @@ header {
 .form-control {
   border: 1px solid #A00E34;
 }
-.form-title{
+
+.form-title {
   color: #850B2C;
   text-align: center;
-  font-weight:bold;
-  font-size:25px;
+  font-weight: bold;
+  font-size: 25px;
   margin-bottom: 25px;
 }
-.sub-title{
+
+.sub-title {
   font-size: 21px;
 }
+
 .image-container {
   position: relative;
   width: 100%;
@@ -460,11 +653,12 @@ body {
   padding: 0;
   color: #A00E34;
 }
+
 .time-display {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color:#A00E34;
+  background-color: #A00E34;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
