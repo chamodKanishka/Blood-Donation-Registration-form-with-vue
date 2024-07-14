@@ -6,7 +6,7 @@ import Landing from "@/components/Landing.vue";
 <template>
   <header>
     <div class="wrapper">
-      <Landing/>
+      <ShowData/>
     </div>
   </header>
 

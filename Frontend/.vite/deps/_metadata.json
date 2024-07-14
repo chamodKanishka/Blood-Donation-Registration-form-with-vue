@@ -1,0 +1,34 @@
+{
+  "hash": "a1a7e52f",
+  "configHash": "dd8446c4",
+  "lockfileHash": "9de08265",
+  "browserHash": "577d9182",
+  "optimized": {
+    "vue": {
+      "src": "../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "e5242afe",
+      "needsInterop": false
+    },
+    "vue-router": {
+      "src": "../../node_modules/vue-router/dist/vue-router.esm-bundler.js",
+      "file": "vue-router.js",
+      "fileHash": "38b1af33",
+      "needsInterop": false
+    },
+    "bootstrap/dist/js/bootstrap.bundle.js": {
+      "src": "../../node_modules/bootstrap/dist/js/bootstrap.bundle.js",
+      "file": "bootstrap_dist_js_bootstrap__bundle__js.js",
+      "fileHash": "140402aa",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-Q5PGHB6G": {
+      "file": "chunk-Q5PGHB6G.js"
+    },
+    "chunk-BUSYA2B4": {
+      "file": "chunk-BUSYA2B4.js"
+    }
+  }
+}

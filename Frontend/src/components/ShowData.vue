@@ -1,50 +1,45 @@
+<template>
+  <VueTable :headers="headers" :keys="keyValue" :data="tableData">
+    <template #th>
+      <th>Actions</th>
+    </template>
+    <template #td="{ item }">
+      <td class="flex">
+        <DeleteIcon @click="deleteItem(item.id)"/>
+        <EditIcon @click="edit(item)"/>
+      </td>
+    </template>
+  </VueTable>
+</template>
+
 <script setup>
-import { VueTable } from "@harv46/vue-table";
+import {ref, onMounted} from 'vue';
+import {VueTable} from "@harv46/vue-table";
 import "@harv46/vue-table/dist/style.css";
 
-const headers = ["id", "name", "amount", "status", "Created By"];
-const keyValue = [
-  "id",
-  "name",
-  "amount",
-  "status",
-  ["createdUser", "user", "name"],
-];
+const headers = ["fname", "mname", "lname", "nationality", "prefecture", "city",
+  "phone_no", "email", "national_id", "height", "weight", "postal_code", "address", "emergency_contact_number", "allergies",
+  "medical_conditions", "blood_related_diseases", "blood_type", "age_confirmation", "consent_to_share"];
+const keyValue = ["fname", "mname", "lname", "nationality", "prefecture", "city",
+  "phone_no", "email", "national_id", "height", "weight", "postal_code", "address",
+  "emergency_contact_number", "allergies", "medical_conditions", "blood_related_diseases",
+  "blood_type", "age_confirmation", "consent_to_share"];
 
-const getData = () => {
-  return [
-    {
-      id: 1,
-      name: "John Doe",
-      amount: 100,
-      status: "Paid",
-      createdUser: { user: { name: "Admin" } },
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      amount: 200,
-      status: "Pending",
-      createdUser: { user: { name: "Admin" } },
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      amount: 150,
-      status: "Paid",
-      createdUser: { user: { name: "Admin" } },
-    },
-    {
-      id: 4,
-      name: "Robert Brown",
-      amount: 300,
-      status: "Failed",
-      createdUser: { user: { name: "Admin" } },
-    },
-  ];
+const tableData = ref([]);
+
+const fetchData = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/donors');
+    const data = await response.json();
+    tableData.value = data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 };
 
-const tableData = getData();
+onMounted(() => {
+  fetchData();
+});
 
 const deleteItem = (id) => {
   console.log("Delete item with id:", id);
@@ -54,20 +49,6 @@ const edit = (item) => {
   console.log("Edit item:", item);
 };
 </script>
-
-<template>
-  <VueTable :headers="headers" :keys="keyValue" :data="tableData">
-    <template #th>
-      <th>Actions</th>
-    </template>
-    <template #td="{ item }">
-      <td class="flex">
-        <DeleteIcon @click="deleteItem(item.id)" />
-        <EditIcon @click="edit(item)" />
-      </td>
-    </template>
-  </VueTable>
-</template>
 
 <style scoped>
 .flex {

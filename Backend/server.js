@@ -39,6 +39,20 @@ app.post('/api/donors', async (req, res) => {
   }
 });
 
+// Route for fetching data from PostgreSQL
+app.get('/api/donors', async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const result = await client.query('SELECT * FROM user_detail');
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data');
+  } finally {
+    client.release();
+  }
+});
+
 // Basic route handler for the root URL
 app.get('/', (req, res) => {
   res.send('Welcome to the Blood Donation API');
