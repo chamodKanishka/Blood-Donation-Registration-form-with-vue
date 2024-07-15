@@ -16,11 +16,11 @@ import "@harv46/vue-table/dist/style.css";
 
 const headers = ["fname", "mname", "lname", "nationality", "prefecture", "city",
   "phone_no", "email", "national_id", "height", "weight", "postal_code", "address", "emergency_contact_number", "allergies",
-  "medical_conditions", "blood_related_diseases", "blood_type"];
+  "medical_conditions", "blood_related_diseases", "blood_type", "slider_value"];
 const keyValue = ["fname", "mname", "lname", "nationality", "prefecture", "city",
   "phone_no", "email", "national_id", "height", "weight", "postal_code", "address",
   "emergency_contact_number", "allergies", "medical_conditions", "blood_related_diseases",
-  "blood_type"];
+  "blood_type", "slider_value"];
 
 const tableData = ref([]);
 
