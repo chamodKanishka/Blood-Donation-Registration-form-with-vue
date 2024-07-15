@@ -2,12 +2,18 @@
 import { ref, onMounted, computed } from 'vue';
 import prefecturesData from '../data/perfecture.json';
 import citiesData from '../data/cities.json';
-import nationalityData from '../data/nationality.json'; // Import nationality data
+import nationalityData from '../data/nationality.json';
 import moment from 'moment';
 import axios from 'axios';
 
 export default {
+  methods: {
+    goToShowData() {
+      this.$router.push({ name: 'ShowData' });
+    }
+  },
   setup() {
+
     const currentTime = ref(moment().format('HH:mm:ss'));
     const prefectures = ref(prefecturesData); // Array of prefectures
     const cities = ref(citiesData); // Object of cities grouped by prefecture
@@ -119,32 +125,32 @@ export default {
       }
 
       return errors;
-};
-
+    };
 
     const submitForm = async () => {
-  validationErrors.value = validateForm();
-  console.log('Validation Errors:', validationErrors.value); // Add this line
-  if (Object.keys(validationErrors.value).length > 0) {
-    alert('Please fix the validation errors');
-    return;
-  }
-
-  try {
-    const result = await axios.post('http://localhost:3000/api/donors', form.value, {
-      headers: {
-        'Content-Type': 'application/json'
+      validationErrors.value = validateForm();
+      console.log('Validation Errors:', validationErrors.value); // Add this line
+      if (Object.keys(validationErrors.value).length > 0) {
+        alert('Please fix the validation errors');
+        return;
       }
-    });
 
-    success.value = 'Data saved successfully';
-    response.value = JSON.stringify(result.data, null, 2);
-    resetForm();
-  } catch (error) {
-    console.error('Error submitting data:', error);
-    response.value = 'Error: ' + (error.response ? error.response.status : error.message);
-  }
-};
+      try {
+        const result = await axios.post('http://localhost:3000/api/donors', form.value, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        success.value = 'Data saved successfully';
+        response.value = JSON.stringify(result.data, null, 2);
+        resetForm();
+        router.push({ name: 'ShowData' }); // Navigate to ShowData page after successful form submission
+      } catch (error) {
+        console.error('Error submitting data:', error);
+        response.value = 'Error: ' + (error.response ? error.response.status : error.message);
+      }
+    };
 
     const resetForm = () => {
       form.value = {
@@ -192,8 +198,8 @@ export default {
     };
   }
 };
-
 </script>
+
 
 <template>
   <head>
@@ -275,7 +281,7 @@ export default {
               </div>
             </div>
           <div class="col-12">
-          <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
+          <label for="email" class="form-label">Email</label>
           <input type="email"
                  class="form-control"
                  id="email"
@@ -483,8 +489,12 @@ export default {
               <button class="btn btn-primary" type="submit" :disabled="isSubmitting">
                 Submit
               </button>
+
         </div>
       </form>
+      <div class="col-12">
+      <button  class="btn btn-primary" type="submit"  @click="goToShowData">Go to ShowData Page</button>
+      </div>
     </div>
   </div>
   <footer class="footer">

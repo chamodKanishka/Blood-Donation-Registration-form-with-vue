@@ -24,7 +24,7 @@
     "vue-fullpage-modal": "^0.5.4",
     "vue-modaltor": "^1.5.4",
     "vue-moment-lib": "^1.2.2",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

@@ -6,12 +6,9 @@ import Landing from "@/components/Landing.vue";
 <template>
   <header>
     <div class="wrapper">
-      <ShowData/>
+      <router-view/>
     </div>
   </header>
-
-  <main>
-  </main>
 </template>
 
 <style scoped>

@@ -1,12 +1,9 @@
 <template>
   <VueTable :headers="headers" :keys="keyValue" :data="tableData">
     <template #th>
-      <th>Actions</th>
     </template>
     <template #td="{ item }">
       <td class="flex">
-        <DeleteIcon @click="deleteItem(item.id)"/>
-        <EditIcon @click="edit(item)"/>
       </td>
     </template>
   </VueTable>
@@ -19,11 +16,11 @@ import "@harv46/vue-table/dist/style.css";
 
 const headers = ["fname", "mname", "lname", "nationality", "prefecture", "city",
   "phone_no", "email", "national_id", "height", "weight", "postal_code", "address", "emergency_contact_number", "allergies",
-  "medical_conditions", "blood_related_diseases", "blood_type", "age_confirmation", "consent_to_share"];
+  "medical_conditions", "blood_related_diseases", "blood_type"];
 const keyValue = ["fname", "mname", "lname", "nationality", "prefecture", "city",
   "phone_no", "email", "national_id", "height", "weight", "postal_code", "address",
   "emergency_contact_number", "allergies", "medical_conditions", "blood_related_diseases",
-  "blood_type", "age_confirmation", "consent_to_share"];
+  "blood_type"];
 
 const tableData = ref([]);
 
